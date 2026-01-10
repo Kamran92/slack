@@ -1,14 +1,32 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useFormik } from 'formik';
+import axios from 'axios';
 import HeaderComponent from '../components/Header';
+import routes from './routes';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../contexts/auth-provider/useAuth';
 
 const LoginPage = () => {
   const inputRef = useRef();
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const [authFailed, setAuthFailed] = useState(false);
 
   const formik = useFormik({
     initialValues: { username: '', password: '' },
-    onSubmit: async () => {
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post('/api/v1/login', values);
+
+        auth.logIn(response.data);
+
+        navigate(routes.chat);
+      } catch(err) {
+        console.log(err)
+        setAuthFailed(true);
+        inputRef.current.select();
+      }
     },
   });
 
@@ -32,6 +50,7 @@ const LoginPage = () => {
                         name="username"
                         id="username"
                         autoComplete="username"
+                        isInvalid={authFailed}
                         required
                         ref={inputRef}
                       />
@@ -44,9 +63,11 @@ const LoginPage = () => {
                         name="password"
                         id="password"
                         autoComplete="current-password"
+                        isInvalid={authFailed}
                         required
                       />
                       <Form.Label htmlFor="password">Пароль</Form.Label>
+                      <div className="invalid-tooltip">{authFailed ? 'Неверные имя пользователя или пароль' : null}</div>
                     </Form.Group>
                     <Button type="submit" variant="outline-primary w-100 mb-3">Войти</Button>
                   </fieldset>
