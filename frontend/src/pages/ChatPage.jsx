@@ -1,18 +1,17 @@
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { actions as channelsAction } from '../slices/Channels.js';
 import HeaderComponent from '../components/Header.jsx';
 import ChannelsComponent from '../components/Channels.jsx';
-import useAuth from '../contexts/auth-provider/useAuth.js';
 import { actions as messagesAction } from '../slices/Messages.js';
+import authContext from '../contexts/authContext.jsx';
 
 const ChatPage = () => {
-  const auth = useAuth();
+  const auth = useContext(authContext)
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(auth)
     const getResponse = async () => {
       try {
         const channels = await axios.get('/api/v1/channels', {

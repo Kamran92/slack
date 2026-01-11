@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
-import AuthContext from './authContext';
+import { useState, useCallback, createContext } from 'react';
+
+const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -38,4 +39,5 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-export default AuthProvider;
+export { AuthProvider };
+export default AuthContext;

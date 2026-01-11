@@ -1,15 +1,15 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import HeaderComponent from '../components/Header';
 import routes from './routes';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../contexts/auth-provider/useAuth';
+import authContext from '../contexts/authContext';
 
 const LoginPage = () => {
   const inputRef = useRef();
-  const auth = useAuth();
+  const auth = useContext(authContext)
   const navigate = useNavigate();
   const [authFailed, setAuthFailed] = useState(false);
 

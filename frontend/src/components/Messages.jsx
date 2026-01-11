@@ -1,15 +1,18 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { InputGroup, Form, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
-import useAuth from '../contexts/auth-provider/useAuth.js';
 import { getCurrentChannel } from '../slices/Channels.js';
+import ChatContext from '../contexts/chatContext.jsx';
+import authContext from '../contexts/authContext.jsx';
 
 const Messages = () => {
   const [text, setText] = useState('');
   const ref = useRef();
   const currentChannel = useSelector(getCurrentChannel);
-  const auth = useAuth();
+  const auth = useContext(authContext)
+  const chatContext = useContext(ChatContext);
+  const { sendNewMessage } = chatContext;
 
   const sendMessage = async () => {
     const message = {
@@ -17,6 +20,9 @@ const Messages = () => {
       channelId: currentChannel.id,
       username: auth.user.username,
     };
+
+    await sendNewMessage(message, auth.getAuth());
+
     setText('');
   };
 

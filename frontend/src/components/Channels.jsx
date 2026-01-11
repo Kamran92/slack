@@ -5,6 +5,7 @@ import cn from 'classnames';
 import { selectors, actions, getCurrentChannel } from '../slices/Channels';
 import { selectors as messagesSelect } from '../slices/Messages.js';
 import Messages from './Messages.jsx';
+import RenderMessage from './RenderMessages.jsx';
 
 const ChannelItem = ({
   handleChannel,
@@ -120,6 +121,7 @@ const ChannelsComponent = () => {
             </p>
             <span className="text-muted">{currentMessages.length} сообщения</span>
           </div>
+          <RenderMessage />
           <Messages />
         </div>
       </div>
