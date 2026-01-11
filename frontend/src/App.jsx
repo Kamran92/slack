@@ -5,6 +5,9 @@ import LoginPage from './pages/LoginPage.jsx';
 import useAuth from './contexts/auth-provider/useAuth.js';
 import ChatPage from './pages/ChatPage.jsx';
 import AuthProvider from './contexts/auth-provider/authProvider.jsx';
+import store from './slices/StoreReducer';
+import { Provider } from 'react-redux';
+import { getCurrentChannel } from './slices/Channels.js';
 
 const Access = ({ children }) => {
   const auth = useAuth();
@@ -17,22 +20,24 @@ const Access = ({ children }) => {
 };
 
 const App = () => (
-  <AuthProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path={routes.chat}
-          element={(
-            <Access>
-              <ChatPage />
-            </Access>
-          )}
-        />
-        <Route path={routes.login} element={<LoginPage />} />
-        <Route path={routes.notFound} element={<NotFoundPage />} />
-      </Routes>
-    </BrowserRouter>
-  </AuthProvider>
+  <Provider store={store}>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path={routes.chat}
+            element={(
+              <Access>
+                <ChatPage getMainChannel={getCurrentChannel}/>
+              </Access>
+            )}
+          />
+          <Route path={routes.login} element={<LoginPage />} />
+          <Route path={routes.notFound} element={<NotFoundPage />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  </Provider>
 );
 
 export default App;
