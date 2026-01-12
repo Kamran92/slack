@@ -6,6 +6,7 @@ import { selectors, actions, getCurrentChannel } from '../slices/Channels';
 import { selectors as messagesSelect } from '../slices/Messages.js';
 import Messages from './Messages.jsx';
 import RenderMessage from './RenderMessages.jsx';
+import { actions as modalAction } from '../slices/Modals.js';
 
 const ChannelItem = ({
   handleChannel,
@@ -82,10 +83,13 @@ const ChannelsComponent = () => {
     ?.name;
 
   const addChannel = () => {
+    dispatch(modalAction.openModal({ type: 'add' }));
   };
   const removeChannel = (id) => {
+    dispatch(modalAction.openModal({ type: 'remove', id }));
   };
   const renameChannel = (id) => {
+    dispatch(modalAction.openModal({ type: 'rename', id }));
   };
 
   return (

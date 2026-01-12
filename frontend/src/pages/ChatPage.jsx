@@ -6,6 +6,8 @@ import HeaderComponent from '../components/Header.jsx';
 import ChannelsComponent from '../components/Channels.jsx';
 import { actions as messagesAction } from '../slices/Messages.js';
 import authContext from '../contexts/authContext.jsx';
+import Modal from '../components/modal/Modal.jsx';
+import { ToastContainer } from 'react-toastify';
 
 const ChatPage = () => {
   const auth = useContext(authContext)
@@ -31,14 +33,29 @@ const ChatPage = () => {
   }, [auth, dispatch]);
 
   return (
-    <div className="d-flex flex-column h-100">
-      <HeaderComponent />
-      <div className="container h-100 my-4 overflow-hidden rounded shadow">
-        <div className="row h-100 bg-white flex-md-row">
-          <ChannelsComponent />
+    <>
+      <div className="d-flex flex-column h-100">
+        <HeaderComponent />
+        <div className="container h-100 my-4 overflow-hidden rounded shadow">
+          <div className="row h-100 bg-white flex-md-row">
+            <ChannelsComponent />
+          </div>
         </div>
       </div>
-    </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <Modal />
+    </>
   );
 };
 

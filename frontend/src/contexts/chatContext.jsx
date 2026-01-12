@@ -29,35 +29,16 @@ const ChatProvider = ({ socket, children }) => {
     });
   }, [dispatch, socket]);
 
-  // const socValue = useCallback((action, value) => (new Promise((resolve, reject) => {
-  //   socket.timeout(1000).emit(action, value, (err, response) => {
-  //     if (response?.status === 'ok') {
-  //       resolve(response);
-  //     } else {
-  //       reject(err);
-  //     }
-  //   });
-  // })), [socket]);
-
-  // const sendNewMessage = useCallback((message) => socValue('newMessage', message), [socValue]);
-
-  // const createChannel = useCallback((name) => socValue('newChannel', { name })
-  //   .then((res) => dispatch(channelsActions.addChannel(res.data)))
-  //   .then((res) => dispatch(channelsActions.setChannelId(res.payload.id))), [dispatch, socValue]);
-
-  // const removeChannel = useCallback((id) => socValue('removeChannel', { id }), [socValue]);
-
-  // const renameChannel = useCallback((id, name) => socValue('renameChannel', { id, name }), [socValue]);
-
-  // const values = useMemo(() => ({
-  //   sendNewMessage,
-  //   createChannel,
-  //   removeChannel,
-  //   renameChannel,
-  // }), [createChannel, removeChannel, renameChannel, sendNewMessage]);
-
   const values = {
-    sendNewMessage: async (message, auth) => await axios.post('/api/v1/messages', message, { headers: auth })
+    sendNewMessage: async (message, auth) => await axios.post('/api/v1/messages', message, { headers: auth }),
+    createChannel: async (name, auth) => {
+      const {data} =  await axios.post('/api/v1/channels', name, { headers: auth })
+
+      dispatch(channelsActions.addChannel(data))
+      dispatch(channelsActions.setChannelId(data.id))
+    },
+    removeChannel: async (id, auth) =>  await axios.delete(`/api/v1/channels/${id}`, { headers: auth }),
+    renameChannel: async (message, auth) =>  await axios.patch(`/api/v1/channels/${message.id}`, message, { headers: auth }),
   }
 
   return (
