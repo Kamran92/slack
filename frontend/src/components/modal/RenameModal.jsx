@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import ChatContext from '../../contexts/chatContext';
 import { selectors } from '../../slices/Channels';
 import AuthContext from '../../contexts/authContext';
+import { useTranslation } from 'react-i18next';
 
 const validate = (channelsName) => Yup.object().shape({
   channelname: Yup.string()
@@ -16,6 +17,7 @@ const validate = (channelsName) => Yup.object().shape({
 });
 
 const RenameModal = ({ handleClose, toast }) => {
+  const { t } = useTranslation();
   const inputRef = useRef();
   const chatContext = useContext(ChatContext);
   const auth = useContext(AuthContext)
@@ -60,7 +62,7 @@ const RenameModal = ({ handleClose, toast }) => {
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <div className="modal-title h4">Переименовать канал</div>
+              <div className="modal-title h4">{t('modal.rename')}</div>
               <button onClick={handleClose} type="button" aria-label="Close" data-bs-dismiss="modal" className="btn btn-close" />
             </div>
             <div className="modal-body">
@@ -79,14 +81,14 @@ const RenameModal = ({ handleClose, toast }) => {
                       required
                       ref={inputRef}
                     />
-                    <label className="visually-hidden" htmlFor="channelname">Имя канала</label>
+                    <label className="visually-hidden" htmlFor="channelname">{t('chatPage.channels.name')}</label>
                     {formik.errors.channelname && formik.touched.channelname && (
                     <div className="invalid-feedback">{formik.errors.channelname}</div>
                     )}
 
                     <div className="d-flex justify-content-end">
-                      <Button onClick={handleClose} type="button" variant="secondary me-2" disabled={formik.isSubmitting}>Отменить</Button>
-                      <Button type="submit" value="submit" variant="primary" disabled={formik.isSubmitting}>Отправить</Button>
+                      <Button onClick={handleClose} type="button" variant="secondary me-2" disabled={formik.isSubmitting}>{t('modal.cancel')}</Button>
+                      <Button type="submit" value="submit" variant="primary" disabled={formik.isSubmitting}>{t('modal.send')}</Button>
                     </div>
                   </div>
                 </fieldset>

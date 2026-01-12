@@ -7,9 +7,11 @@ import ChannelsComponent from '../components/Channels.jsx';
 import { actions as messagesAction } from '../slices/Messages.js';
 import authContext from '../contexts/authContext.jsx';
 import Modal from '../components/modal/Modal.jsx';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const ChatPage = () => {
+  const { t } = useTranslation();
   const auth = useContext(authContext)
   const dispatch = useDispatch();
 
@@ -25,12 +27,13 @@ const ChatPage = () => {
         dispatch(channelsAction.addChannels(channels.data));
         dispatch(messagesAction.addMessages(messages.data));
         dispatch(channelsAction.setChannelId(channels.data[0].id));
-      } catch(err) {
-        console.log(err)
+      } catch {
+        auth.logOut();
+        toast.error(t('toast.networkError'), { toastId: `${t('toast.networkError')} error` });
       }
     };
     getResponse();
-  }, [auth, dispatch]);
+  }, [auth, dispatch, t]);
 
   return (
     <>

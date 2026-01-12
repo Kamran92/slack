@@ -7,6 +7,7 @@ import LeoProfanity from 'leo-profanity';
 import ChatContext from '../../contexts/chatContext';
 import { selectors } from '../../slices/Channels';
 import authContext from '../../contexts/authContext.jsx';
+import { useTranslation } from 'react-i18next';
 
 const validate = (channelsName) => Yup.object().shape({
   channelName: Yup.string()
@@ -17,6 +18,7 @@ const validate = (channelsName) => Yup.object().shape({
 });
 
 const AddModal = ({ handleClose, toast }) => {
+  const { t } = useTranslation();
   const inputRef = useRef();
   const auth = useContext(authContext)
   const chatContext = useContext(ChatContext);
@@ -55,7 +57,7 @@ const AddModal = ({ handleClose, toast }) => {
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <div className="modal-title h4">Добавить</div>
+              <div className="modal-title h4">{t('modal.add')}</div>
               <button onClick={handleClose} type="button" aria-label="Close" data-bs-dismiss="modal" className="btn btn-close" />
             </div>
             <div className="modal-body">
@@ -73,14 +75,14 @@ const AddModal = ({ handleClose, toast }) => {
                       required
                       ref={inputRef}
                     />
-                    <label className="visually-hidden" htmlFor="name">Имя канала</label>
+                    <label className="visually-hidden" htmlFor="name">{t('chatPage.channels.name')}</label>
                     {formik.errors.channelName && formik.touched.channelName && (
                     <div className="invalid-feedback">{formik.errors.channelName}</div>
                     )}
 
                     <div className="d-flex justify-content-end">
-                      <Button onClick={handleClose} type="button" variant="secondary me-2" disabled={formik.isSubmitting}>Отменить</Button>
-                      <Button type="submit" value="submit" variant="primary" disabled={formik.isSubmitting}>Отправить</Button>
+                      <Button onClick={handleClose} type="button" variant="secondary me-2" disabled={formik.isSubmitting}>{t('modal.cancel')}</Button>
+                      <Button type="submit" value="submit" variant="primary" disabled={formik.isSubmitting}>{t('modal.send')}</Button>
                     </div>
                   </div>
                 </fieldset>

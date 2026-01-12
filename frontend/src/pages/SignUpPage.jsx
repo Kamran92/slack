@@ -8,6 +8,7 @@ import routes from '../pages/routes.js';
 import HeaderComponent from '../components/Header.jsx';
 import AuthContext from '../contexts/authContext.jsx';
 import image from '../assets/image.png'
+import { useTranslation } from 'react-i18next';
 
 const loginSchema = Yup.object().shape({
   username: Yup.string()
@@ -22,6 +23,7 @@ const loginSchema = Yup.object().shape({
 });
 
 const SignUpPage = () => {
+  const { t } = useTranslation();
   const auth = useContext(AuthContext)
   const userNameRef = useRef();
   const passwordRef = useRef();
@@ -73,7 +75,7 @@ const SignUpPage = () => {
                 </div>
                 <Form onSubmit={formik.handleSubmit} className="w-50">
                   <fieldset disabled={formik.isSubmitting}>
-                    <h1 className="text-center mb-4">Регистрация</h1>
+                    <h1 className="text-center mb-4">{t('signUp.title')}</h1>
                     <Form.Group className="form-floating mb-3">
                       <Form.Control
                         onChange={formik.handleChange}
@@ -91,7 +93,7 @@ const SignUpPage = () => {
                       <Form.Control.Feedback type="invalid" tooltip>
                         {formik.errors.username}
                       </Form.Control.Feedback>
-                      <Form.Label htmlFor="username">Имя пользователя</Form.Label>
+                      <Form.Label htmlFor="username">{t('placeholder.username')}</Form.Label>
                     </Form.Group>
                     <Form.Group className="form-floating mb-3">
                       <Form.Control
@@ -108,12 +110,12 @@ const SignUpPage = () => {
                         className={formik.touched.password
                     && formik.errors.password ? 'is-invalid' : ''}
                       />
-                      <Form.Label htmlFor="password">Пароль</Form.Label>
+                      <Form.Label htmlFor="password">{t('placeholder.password')}</Form.Label>
                       <div className="invalid-tooltip">{formik.errors.password || regFail}</div>
                     </Form.Group>
                     <Form.Group className="form-floating mb-4">
                       <Form.Control
-                        type="password"
+                        type="confirmpassword"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.confirmpassword}
@@ -127,10 +129,10 @@ const SignUpPage = () => {
                         className={formik.touched.confirmpassword
                     && formik.errors.confirmpassword ? 'is-invalid' : ''}
                       />
-                      <Form.Label htmlFor="confirmpassword">Подтвердите пароль</Form.Label>
-                      <div className="invalid-tooltip">{formik.errors.confirmpassword || 'Такой пользователь уже существует'}</div>
+                      <Form.Label htmlFor="confirmpassword">{t('placeholder.confirmPassword')}</Form.Label>
+                      <div className="invalid-tooltip">{formik.errors.confirmpassword || t('signUp.errors.alreadyRegistered')}</div>
                     </Form.Group>
-                    <Button type="submit" variant="outline-primary w-100">Зарегистрироваться</Button>
+                    <Button type="submit" variant="outline-primary w-100">{t('signUp.registration')}</Button>
                   </fieldset>
                 </Form>
               </div>

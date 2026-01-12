@@ -6,9 +6,11 @@ import HeaderComponent from '../components/Header';
 import routes from './routes';
 import { useNavigate } from 'react-router-dom';
 import authContext from '../contexts/authContext';
+import { useTranslation } from 'react-i18next';
 
 const LoginPage = () => {
   const inputRef = useRef();
+  const { t } = useTranslation();
   const auth = useContext(authContext)
   const navigate = useNavigate();
   const [authFailed, setAuthFailed] = useState(false);
@@ -43,7 +45,7 @@ const LoginPage = () => {
                 </div>
                 <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
                   <fieldset disabled={formik.isSubmitting}>
-                    <h1 className="text-center mb-4">Войти</h1>
+                    <h1 className="text-center mb-4">{t('logIn.title')}</h1>
                     <Form.Group className="form-floating mb-3">
                       <Form.Control
                         onChange={formik.handleChange}
@@ -52,13 +54,15 @@ const LoginPage = () => {
                         autoComplete="username"
                         isInvalid={authFailed}
                         required
+                        placeholder={t('placeholder.login')}
                         ref={inputRef}
                       />
-                      <Form.Label htmlFor="username">Ваш ник</Form.Label>
+                      <Form.Label htmlFor="username">{t('placeholder.login')}</Form.Label>
                     </Form.Group>
                     <Form.Group className="form-floating mb-4">
                       <Form.Control
                         onChange={formik.handleChange}
+                        placeholder={t('placeholder.password')}
                         type="password"
                         name="password"
                         id="password"
@@ -66,18 +70,18 @@ const LoginPage = () => {
                         isInvalid={authFailed}
                         required
                       />
-                      <Form.Label htmlFor="password">Пароль</Form.Label>
-                      <div className="invalid-tooltip">{authFailed ? 'Неверные имя пользователя или пароль' : null}</div>
+                      <Form.Label htmlFor="password">{t('placeholder.password')}</Form.Label>
+                      <div className="invalid-tooltip">{authFailed ? t('logIn.errors.authorization') : null}</div>
                     </Form.Group>
-                    <Button type="submit" variant="outline-primary w-100 mb-3">Войти</Button>
+                    <Button type="submit" variant="outline-primary w-100 mb-3">{t('logIn.title')}</Button>
                   </fieldset>
                 </Form>
               </div>
               <div className="card-footer p-4">
                 <div className="text-center">
-                  <span>Нет аккаунта?</span>
+                  <span>{t('logIn.newUser')}</span>
                   {' '}
-                  <a href="/signup">Регистрация</a>
+                  <a href="/signup">{t('signUp.title')}</a>
                 </div>
               </div>
             </div>

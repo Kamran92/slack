@@ -5,8 +5,10 @@ import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { getCurrentChannel } from '../slices/Channels.js';
 import ChatContext from '../contexts/chatContext.jsx';
 import authContext from '../contexts/authContext.jsx';
+import { useTranslation } from 'react-i18next';
 
 const Messages = () => {
+  const { t } = useTranslation();
   const [text, setText] = useState('');
   const ref = useRef();
   const currentChannel = useSelector(getCurrentChannel);
@@ -53,7 +55,9 @@ const Messages = () => {
           />
           <Button variant="group-vertical btn-light" type="submit" disabled={text === ''}>
             <ArrowRightSquare width="20" height="20" />
-            <span className="visually-hidden"> Отправить </span>
+            <span className="visually-hidden">
+              {t('charPage.chat.send')}
+            </span>
           </Button>
         </InputGroup>
       </Form>

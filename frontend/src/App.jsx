@@ -12,6 +12,9 @@ import { AuthProvider } from './contexts/authContext.jsx';
 import  AuthContext from './contexts/authContext.jsx';
 import { useContext } from 'react';
 import SignUpPage from './pages/SignUpPage.jsx';
+import ru from './locales/ru';
+import { initReactI18next } from 'react-i18next';
+import i18next from 'i18next';
 
 const Access = ({ children }) => {
   const auth = useContext(AuthContext)
@@ -26,6 +29,11 @@ const Access = ({ children }) => {
 
 const App = () => {
   const socket = io();
+  const i18n = i18next.createInstance();
+  i18n.use(initReactI18next).init({
+    resources: { ru },
+    fallbackLng: 'ru',
+  });
 
   return (
     <Provider store={store}>

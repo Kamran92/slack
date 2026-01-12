@@ -4,8 +4,10 @@ import { Button } from 'react-bootstrap';
 import { actions, selectors } from '../../slices/Channels.js';
 import ChatContext from '../../contexts/chatContext';
 import AuthContext from '../../contexts/authContext.jsx';
+import { useTranslation } from 'react-i18next';
 
 const RemoveModal = ({ handleClose, toast }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const channels = useSelector(selectors.selectAll);
   const chatContext = useContext(ChatContext);
@@ -36,14 +38,14 @@ const RemoveModal = ({ handleClose, toast }) => {
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <div className="modal-title h4">Удалить канал</div>
+              <div className="modal-title h4">{t('modal.remove')}</div>
               <button onClick={handleClick} type="button" aria-label="Close" data-bs-dismiss="modal" className="btn btn-close" />
             </div>
             <div className="modal-body">
-              <p className="lead">Вы уверены?</p>
+              <p className="lead">{t('modal.confirm')}</p>
               <div className="d-flex justify-content-end">
-                <Button onClick={handleClick} type="button" variant="secondary me-2">Отменить</Button>
-                <Button onClick={() => remove()} type="button" value="submit" variant="primary btn-danger">Удалить</Button>
+                <Button onClick={handleClick} type="button" variant="secondary me-2">{t('modal.cancel')}</Button>
+                <Button onClick={() => remove()} type="button" value="submit" variant="primary btn-danger">{t('modal.removeSend')}</Button>
               </div>
             </div>
           </div>
