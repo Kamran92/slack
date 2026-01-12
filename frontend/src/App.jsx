@@ -11,6 +11,7 @@ import { ChatProvider } from './contexts/chatContext.jsx';
 import { AuthProvider } from './contexts/authContext.jsx';
 import  AuthContext from './contexts/authContext.jsx';
 import { useContext } from 'react';
+import SignUpPage from './pages/SignUpPage.jsx';
 
 const Access = ({ children }) => {
   const auth = useContext(AuthContext)
@@ -43,6 +44,7 @@ const App = () => {
             />
             <Route path={routes.login} element={<LoginPage />} />
             <Route path={routes.notFound} element={<NotFoundPage />} />
+            <Route path={routes.signup} element={<SignUpPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
