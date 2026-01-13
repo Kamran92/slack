@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { selectors } from '../slices/Messages.js';
 import { getCurrentChannel } from '../slices/Channels.js';
+import LeoProfanity from 'leo-profanity'
 
 const RenderMessage = () => {
   const currentChannel = useSelector(getCurrentChannel);
@@ -23,7 +24,7 @@ const RenderMessage = () => {
         <div key={message.id} className="text-break mb-2">
           <b>{message.username}</b>
           :
-          {message.body}
+          {` ${LeoProfanity.clean(message.body)}`}  
         </div>
       ))}
       <span ref={messageRef} />
