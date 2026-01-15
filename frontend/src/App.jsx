@@ -16,11 +16,7 @@ import ru from './locales/ru'
 import { initReactI18next } from 'react-i18next'
 import i18next from 'i18next'
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
-
-const rollbarConfig = {
-  accessToken: process.env.TOKEN_ROLLBAR,
-  environment: 'testenv',
-}
+import { rollbarConfig } from './settings/rollbarConfig.js'
 
 const Access = ({ children }) => {
   const auth = useContext(AuthContext)
