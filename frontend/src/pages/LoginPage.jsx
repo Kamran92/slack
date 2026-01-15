@@ -1,36 +1,37 @@
-import { useContext, useRef, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
-import { useFormik } from 'formik';
-import axios from 'axios';
-import HeaderComponent from '../components/Header';
-import routes from './routes';
-import { useNavigate } from 'react-router-dom';
-import authContext from '../contexts/authContext';
-import { useTranslation } from 'react-i18next';
+import { useContext, useRef, useState } from 'react'
+import { Button, Form } from 'react-bootstrap'
+import { useFormik } from 'formik'
+import axios from 'axios'
+import HeaderComponent from '../components/Header'
+import routes from './routes'
+import { useNavigate } from 'react-router-dom'
+import authContext from '../contexts/authContext'
+import { useTranslation } from 'react-i18next'
 
 const LoginPage = () => {
-  const inputRef = useRef();
-  const { t } = useTranslation();
+  const inputRef = useRef()
+  const { t } = useTranslation()
   const auth = useContext(authContext)
-  const navigate = useNavigate();
-  const [authFailed, setAuthFailed] = useState(false);
+  const navigate = useNavigate()
+  const [authFailed, setAuthFailed] = useState(false)
 
   const formik = useFormik({
     initialValues: { username: '', password: '' },
     onSubmit: async (values) => {
       try {
-        const response = await axios.post('/api/v1/login', values);
+        const response = await axios.post('/api/v1/login', values)
 
-        auth.logIn(response.data);
+        auth.logIn(response.data)
 
-        navigate(routes.chat);
-      } catch(err) {
+        navigate(routes.chat)
+      }
+      catch (err) {
         console.log(err)
-        setAuthFailed(true);
-        inputRef.current.select();
+        setAuthFailed(true)
+        inputRef.current.select()
       }
     },
-  });
+  })
 
   return (
     <div className="d-flex flex-column h-100">
@@ -89,7 +90,7 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

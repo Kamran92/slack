@@ -1,36 +1,36 @@
-import { useState, useRef, useEffect, useContext } from 'react';
-import { useSelector } from 'react-redux';
-import { InputGroup, Form, Button } from 'react-bootstrap';
-import { ArrowRightSquare } from 'react-bootstrap-icons';
-import { getCurrentChannel } from '../slices/Channels.js';
-import ChatContext from '../contexts/chatContext.jsx';
-import authContext from '../contexts/authContext.jsx';
-import { useTranslation } from 'react-i18next';
+import { useState, useRef, useEffect, useContext } from 'react'
+import { useSelector } from 'react-redux'
+import { InputGroup, Form, Button } from 'react-bootstrap'
+import { ArrowRightSquare } from 'react-bootstrap-icons'
+import { getCurrentChannel } from '../slices/Channels.js'
+import ChatContext from '../contexts/chatContext.jsx'
+import authContext from '../contexts/authContext.jsx'
+import { useTranslation } from 'react-i18next'
 
 const Messages = () => {
-  const { t } = useTranslation();
-  const [text, setText] = useState('');
-  const ref = useRef();
-  const currentChannel = useSelector(getCurrentChannel);
+  const { t } = useTranslation()
+  const [text, setText] = useState('')
+  const ref = useRef()
+  const currentChannel = useSelector(getCurrentChannel)
   const auth = useContext(authContext)
-  const chatContext = useContext(ChatContext);
-  const { sendNewMessage } = chatContext;
+  const chatContext = useContext(ChatContext)
+  const { sendNewMessage } = chatContext
 
   const sendMessage = async () => {
     const message = {
       body: text,
       channelId: currentChannel.id,
       username: auth.user.username,
-    };
+    }
 
-    await sendNewMessage(message, auth.getAuth());
+    await sendNewMessage(message, auth.getAuth())
 
-    setText('');
-  };
+    setText('')
+  }
 
   useEffect(() => {
-    ref.current.focus();
-  }, []);
+    ref.current.focus()
+  }, [])
 
   return (
     <div className="mt-auto px-5 py-3">
@@ -38,8 +38,8 @@ const Messages = () => {
         className="py-1 border rounded-2"
         noValidate=""
         onSubmit={(e) => {
-          e.preventDefault();
-          sendMessage();
+          e.preventDefault()
+          sendMessage()
         }}
       >
         <InputGroup className="has-validation">
@@ -47,7 +47,7 @@ const Messages = () => {
             name="body"
             placeholder="Введите сообщение..."
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={e => setText(e.target.value)}
             aria-label="Новое сообщение"
             className="border-0 p-0 ps-2"
             noValidate=""
@@ -62,7 +62,7 @@ const Messages = () => {
         </InputGroup>
       </Form>
     </div>
-  );
-};
+  )
+}
 
-export default Messages;
+export default Messages

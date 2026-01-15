@@ -1,34 +1,34 @@
-import { useRef, useEffect, useContext } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Button, Form } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import LeoProfanity from 'leo-profanity';
-import ChatContext from '../../contexts/chatContext';
-import { selectors } from '../../slices/Channels';
-import authContext from '../../contexts/authContext.jsx';
-import { useTranslation } from 'react-i18next';
+import { useRef, useEffect, useContext } from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { Button, Form } from 'react-bootstrap'
+import { useSelector } from 'react-redux'
+import LeoProfanity from 'leo-profanity'
+import ChatContext from '../../contexts/chatContext'
+import { selectors } from '../../slices/Channels'
+import authContext from '../../contexts/authContext.jsx'
+import { useTranslation } from 'react-i18next'
 
-const validate = (channelsName) => Yup.object().shape({
+const validate = channelsName => Yup.object().shape({
   channelName: Yup.string()
     .min(3, 'От 3 до 20 символов')
     .max(20, 'От 3 до 20 символов')
     .required('От 3 до 20 символов')
     .notOneOf(channelsName, 'Должно быть уникальным'),
-});
+})
 
 const AddModal = ({ handleClose, toast }) => {
-  const { t } = useTranslation();
-  const inputRef = useRef();
+  const { t } = useTranslation()
+  const inputRef = useRef()
   const auth = useContext(authContext)
-  const chatContext = useContext(ChatContext);
-  const { createChannel } = chatContext;
-  const channels = useSelector(selectors.selectAll);
-  const channelsName = channels.map((channel) => channel.name);
+  const chatContext = useContext(ChatContext)
+  const { createChannel } = chatContext
+  const channels = useSelector(selectors.selectAll)
+  const channelsName = channels.map(channel => channel.name)
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
+    inputRef.current.focus()
+  }, [])
 
   const formik = useFormik({
     initialValues: {
@@ -36,17 +36,18 @@ const AddModal = ({ handleClose, toast }) => {
     },
     onSubmit: async (values) => {
       try {
-        await createChannel({name: LeoProfanity.clean(values.channelName)}, auth.getAuth());
-        handleClose();
-        toast('Канал создан', 'success');
-      } catch(err) {
+        await createChannel({ name: LeoProfanity.clean(values.channelName) }, auth.getAuth())
+        handleClose()
+        toast('Канал создан', 'success')
+      }
+      catch (err) {
         console.log(err)
-        toast('Ошибка', 'error');
+        toast('Ошибка', 'error')
       }
     },
     validationSchema: validate(channelsName),
     validateOnChange: false,
-  });
+  })
 
   return (
     <>
@@ -77,7 +78,7 @@ const AddModal = ({ handleClose, toast }) => {
                     />
                     <label className="visually-hidden" htmlFor="channelName">{t('chatPage.channels.name')}</label>
                     {formik.errors.channelName && formik.touched.channelName && (
-                    <div className="invalid-feedback">{formik.errors.channelName}</div>
+                      <div className="invalid-feedback">{formik.errors.channelName}</div>
                     )}
 
                     <div className="d-flex justify-content-end">
@@ -92,7 +93,7 @@ const AddModal = ({ handleClose, toast }) => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default AddModal;
+export default AddModal

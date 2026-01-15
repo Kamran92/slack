@@ -1,13 +1,13 @@
-import { Button } from 'react-bootstrap';
-import routes from '../pages/routes.js';
-import AuthContext from '../contexts/authContext.jsx';
-import { useContext } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Button } from 'react-bootstrap'
+import routes from '../pages/routes.js'
+import AuthContext from '../contexts/authContext.jsx'
+import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const HeaderComponent = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   const auth = useContext(AuthContext)
-  const loggedIn = auth.user !== null;
+  const loggedIn = auth.user !== null
 
   return (
     <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
@@ -18,7 +18,7 @@ const HeaderComponent = () => {
           : null}
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default HeaderComponent;
+export default HeaderComponent

@@ -1,14 +1,14 @@
-import { useRef, useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Form } from 'react-bootstrap';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import axios from 'axios';
-import routes from '../pages/routes.js';
-import HeaderComponent from '../components/Header.jsx';
-import AuthContext from '../contexts/authContext.jsx';
+import { useRef, useEffect, useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Button, Form } from 'react-bootstrap'
+import * as Yup from 'yup'
+import { useFormik } from 'formik'
+import axios from 'axios'
+import routes from '../pages/routes.js'
+import HeaderComponent from '../components/Header.jsx'
+import AuthContext from '../contexts/authContext.jsx'
 import image from '../assets/image.png'
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 
 const loginSchema = Yup.object().shape({
   username: Yup.string()
@@ -20,16 +20,16 @@ const loginSchema = Yup.object().shape({
     .min(6, 'Не менее 6 символов'),
   confirmpassword: Yup.string()
     .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать'),
-});
+})
 
 const SignUpPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   const auth = useContext(AuthContext)
-  const userNameRef = useRef();
-  const passwordRef = useRef();
-  const confirmRef = useRef();
-  const navigate = useNavigate();
-  const [regFail, setRegFail] = useState(false);
+  const userNameRef = useRef()
+  const passwordRef = useRef()
+  const confirmRef = useRef()
+  const navigate = useNavigate()
+  const [regFail, setRegFail] = useState(false)
 
   const formik = useFormik({
     initialValues: {
@@ -39,28 +39,29 @@ const SignUpPage = () => {
     },
     onSubmit: async (values) => {
       try {
-        const response = await axios.post('api/v1/signup', values);
-        auth.logIn(response.data);
-        navigate(routes.chat);
-      } catch (err) {
-        formik.setSubmitting(false);
+        const response = await axios.post('api/v1/signup', values)
+        auth.logIn(response.data)
+        navigate(routes.chat)
+      }
+      catch (err) {
+        formik.setSubmitting(false)
         if (err.isAxiosError && err.response.status === 401) {
-          userNameRef.current.select();
-          return;
+          userNameRef.current.select()
+          return
         }
         if (err.response.status === 409) {
-          setRegFail(true);
+          setRegFail(true)
         }
-        throw err;
+        throw err
       }
     },
     validationSchema: loginSchema,
     validateOnChange: true,
-  });
+  })
 
   useEffect(() => {
-    userNameRef.current.focus();
-  }, []);
+    userNameRef.current.focus()
+  }, [])
 
   return (
     <div className="d-flex flex-column h-100">
@@ -88,7 +89,7 @@ const SignUpPage = () => {
                         placeholder="От 3 до 20 символов"
                         ref={userNameRef}
                         isInvalid={(formik.touched.username
-                    && formik.errors.username)}
+                          && formik.errors.username)}
                       />
                       <Form.Control.Feedback type="invalid" tooltip>
                         {formik.errors.username}
@@ -108,7 +109,9 @@ const SignUpPage = () => {
                         ref={passwordRef}
                         required
                         className={formik.touched.password
-                    && formik.errors.password ? 'is-invalid' : ''}
+                          && formik.errors.password
+                          ? 'is-invalid'
+                          : ''}
                       />
                       <Form.Label htmlFor="password">{t('placeholder.password')}</Form.Label>
                       <div className="invalid-tooltip">{formik.errors.password || regFail}</div>
@@ -127,7 +130,9 @@ const SignUpPage = () => {
                         required
                         isInvalid={formik.errors.confirmpassword || regFail}
                         className={formik.touched.confirmpassword
-                    && formik.errors.confirmpassword ? 'is-invalid' : ''}
+                          && formik.errors.confirmpassword
+                          ? 'is-invalid'
+                          : ''}
                       />
                       <Form.Label htmlFor="confirmpassword">{t('placeholder.confirmPassword')}</Form.Label>
                       <div className="invalid-tooltip">{formik.errors.confirmpassword || t('signUp.errors.alreadyRegistered')}</div>
@@ -141,7 +146,7 @@ const SignUpPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SignUpPage;
+export default SignUpPage

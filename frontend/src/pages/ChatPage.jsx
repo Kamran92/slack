@@ -1,39 +1,40 @@
-import axios from 'axios';
-import { useContext, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { actions as channelsAction } from '../slices/Channels.js';
-import HeaderComponent from '../components/Header.jsx';
-import ChannelsComponent from '../components/Channels.jsx';
-import { actions as messagesAction } from '../slices/Messages.js';
-import authContext from '../contexts/authContext.jsx';
-import Modal from '../components/modal/Modal.jsx';
-import { toast, ToastContainer } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
+import axios from 'axios'
+import { useContext, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { actions as channelsAction } from '../slices/Channels.js'
+import HeaderComponent from '../components/Header.jsx'
+import ChannelsComponent from '../components/Channels.jsx'
+import { actions as messagesAction } from '../slices/Messages.js'
+import authContext from '../contexts/authContext.jsx'
+import Modal from '../components/modal/Modal.jsx'
+import { toast, ToastContainer } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 
 const ChatPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   const auth = useContext(authContext)
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const getResponse = async () => {
       try {
         const channels = await axios.get('/api/v1/channels', {
           headers: auth.getAuth(),
-        });
+        })
         const messages = await axios.get('/api/v1/messages', {
           headers: auth.getAuth(),
         })
-        dispatch(channelsAction.addChannels(channels.data));
-        dispatch(messagesAction.addMessages(messages.data));
-        dispatch(channelsAction.setChannelId(channels.data[0].id));
-      } catch {
-        auth.logOut();
-        toast.error(t('toast.networkError'), { toastId: `${t('toast.networkError')} error` });
+        dispatch(channelsAction.addChannels(channels.data))
+        dispatch(messagesAction.addMessages(messages.data))
+        dispatch(channelsAction.setChannelId(channels.data[0].id))
       }
-    };
-    getResponse();
-  }, [auth, dispatch, t]);
+      catch {
+        auth.logOut()
+        toast.error(t('toast.networkError'), { toastId: `${t('toast.networkError')} error` })
+      }
+    }
+    getResponse()
+  }, [auth, dispatch, t])
 
   return (
     <>
@@ -59,7 +60,7 @@ const ChatPage = () => {
       />
       <Modal />
     </>
-  );
-};
+  )
+}
 
-export default ChatPage;
+export default ChatPage

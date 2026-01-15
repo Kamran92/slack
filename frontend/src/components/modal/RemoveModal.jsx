@@ -1,33 +1,34 @@
-import { useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button } from 'react-bootstrap';
-import { actions, selectors } from '../../slices/Channels.js';
-import ChatContext from '../../contexts/chatContext';
-import AuthContext from '../../contexts/authContext.jsx';
-import { useTranslation } from 'react-i18next';
+import { useContext } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button } from 'react-bootstrap'
+import { actions, selectors } from '../../slices/Channels.js'
+import ChatContext from '../../contexts/chatContext'
+import AuthContext from '../../contexts/authContext.jsx'
+import { useTranslation } from 'react-i18next'
 
 const RemoveModal = ({ handleClose, toast }) => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const channels = useSelector(selectors.selectAll);
-  const chatContext = useContext(ChatContext);
-  const { removeChannel } = chatContext;
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const channels = useSelector(selectors.selectAll)
+  const chatContext = useContext(ChatContext)
+  const { removeChannel } = chatContext
   const auth = useContext(AuthContext)
   const handleClick = () => {
-    handleClose(true);
-  };
-  const id = useSelector((state) => state.modal.id);
+    handleClose(true)
+  }
+  const id = useSelector(state => state.modal.id)
 
   const remove = async () => {
     try {
-      dispatch(actions.setChannelId(channels[0].id));
-      await removeChannel(id, auth.getAuth());
-      handleClose(true);
-      toast('Канал удалён', 'success');
-    } catch {
-      toast('Ошибка', 'error');
+      dispatch(actions.setChannelId(channels[0].id))
+      await removeChannel(id, auth.getAuth())
+      handleClose(true)
+      toast('Канал удалён', 'success')
     }
-  };
+    catch {
+      toast('Ошибка', 'error')
+    }
+  }
 
   return (
     <>
@@ -52,7 +53,7 @@ const RemoveModal = ({ handleClose, toast }) => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default RemoveModal;
+export default RemoveModal

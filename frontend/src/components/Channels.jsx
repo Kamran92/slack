@@ -1,13 +1,13 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
-import { PlusSquare } from 'react-bootstrap-icons';
-import cn from 'classnames';
-import { selectors, actions, getCurrentChannel } from '../slices/Channels';
-import { selectors as messagesSelect } from '../slices/Messages.js';
-import Messages from './Messages.jsx';
-import RenderMessage from './RenderMessages.jsx';
-import { actions as modalAction } from '../slices/Modals.js';
-import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux'
+import { Button, Dropdown, ButtonGroup } from 'react-bootstrap'
+import { PlusSquare } from 'react-bootstrap-icons'
+import cn from 'classnames'
+import { selectors, actions, getCurrentChannel } from '../slices/Channels'
+import { selectors as messagesSelect } from '../slices/Messages.js'
+import Messages from './Messages.jsx'
+import RenderMessage from './RenderMessages.jsx'
+import { actions as modalAction } from '../slices/Modals.js'
+import { useTranslation } from 'react-i18next'
 
 const ChannelItem = ({
   handleChannel,
@@ -19,80 +19,80 @@ const ChannelItem = ({
   <li className="nav-item w-100" key={channel.id}>
     { !channel.removable
       ? (
-        <button
-          type="button"
-          onClick={() => handleChannel(channel.id)}
-          className={cn('w-100', 'rounded-0', 'text-start', 'btn', {
-            'btn-secondary': channel.id === currentChannel.id,
-          })}
-        >
-          <span>#</span>
-          {' '}
-          {channel.name}
-        </button>
-      )
-      : (
-        <Dropdown as={ButtonGroup} className="d-flex">
-          <Button
+          <button
             type="button"
-            variant={channel.id === currentChannel.id && 'secondary'}
             onClick={() => handleChannel(channel.id)}
-            className="w-100 rounded-0 text-start text-truncate"
+            className={cn('w-100', 'rounded-0', 'text-start', 'btn', {
+              'btn-secondary': channel.id === currentChannel.id,
+            })}
           >
-            <span className="me-1">#</span>
+            <span>#</span>
+            {' '}
             {channel.name}
-          </Button>
-          <Dropdown.Toggle
-            split
-            variant={channel.id === currentChannel.id && 'secondary'}
-            id={`dropdown-split-basic-${channel.id}`}
-          >
-            <span className="visually-hidden">Управление каналом</span>
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item
-              href="#"
-              onClick={() => remove(channel.id)}
-              id={channel.id}
+          </button>
+        )
+      : (
+          <Dropdown as={ButtonGroup} className="d-flex">
+            <Button
+              type="button"
+              variant={channel.id === currentChannel.id && 'secondary'}
+              onClick={() => handleChannel(channel.id)}
+              className="w-100 rounded-0 text-start text-truncate"
             >
-              Удалить
-            </Dropdown.Item>
-            <Dropdown.Item
-              href="#"
-              onClick={() => rename(channel.id)}
-              id={channel.id}
+              <span className="me-1">#</span>
+              {channel.name}
+            </Button>
+            <Dropdown.Toggle
+              split
+              variant={channel.id === currentChannel.id && 'secondary'}
+              id={`dropdown-split-basic-${channel.id}`}
             >
-              Переименовать
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      )}
+              <span className="visually-hidden">Управление каналом</span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                href="#"
+                onClick={() => remove(channel.id)}
+                id={channel.id}
+              >
+                Удалить
+              </Dropdown.Item>
+              <Dropdown.Item
+                href="#"
+                onClick={() => rename(channel.id)}
+                id={channel.id}
+              >
+                Переименовать
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        )}
   </li>
-);
+)
 
 const ChannelsComponent = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const channels = useSelector(selectors.selectAll);
-  const currentChannel = useSelector(getCurrentChannel);
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const channels = useSelector(selectors.selectAll)
+  const currentChannel = useSelector(getCurrentChannel)
   const handleChannel = (id) => {
-    dispatch(actions.setChannelId(id));
-  };
-  const messagesMass = useSelector(messagesSelect.selectAll);
-  const currentMessages = messagesMass.filter((message) => message.channelId === currentChannel.id);
+    dispatch(actions.setChannelId(id))
+  }
+  const messagesMass = useSelector(messagesSelect.selectAll)
+  const currentMessages = messagesMass.filter(message => message.channelId === currentChannel.id)
   const currentChannelName = useSelector(selectors.selectAll)
     .find(({ id }) => id === currentChannel.id)
-    ?.name;
+    ?.name
 
   const addChannel = () => {
-    dispatch(modalAction.openModal({ type: 'add' }));
-  };
+    dispatch(modalAction.openModal({ type: 'add' }))
+  }
   const removeChannel = (id) => {
-    dispatch(modalAction.openModal({ type: 'remove', id }));
-  };
+    dispatch(modalAction.openModal({ type: 'remove', id }))
+  }
   const renameChannel = (id) => {
-    dispatch(modalAction.openModal({ type: 'rename', id }));
-  };
+    dispatch(modalAction.openModal({ type: 'rename', id }))
+  }
 
   return (
     <>
@@ -105,7 +105,7 @@ const ChannelsComponent = () => {
           </button>
         </div>
         <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
-          {channels.map((channel) => (
+          {channels.map(channel => (
             <ChannelItem
               handleChannel={handleChannel}
               key={channel.id}
@@ -133,7 +133,7 @@ const ChannelsComponent = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ChannelsComponent;
+export default ChannelsComponent

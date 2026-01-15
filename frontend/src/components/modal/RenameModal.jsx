@@ -1,34 +1,34 @@
-import { useRef, useEffect, useContext } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Button, Form } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import ChatContext from '../../contexts/chatContext';
-import { selectors } from '../../slices/Channels';
-import AuthContext from '../../contexts/authContext';
-import { useTranslation } from 'react-i18next';
+import { useRef, useEffect, useContext } from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { Button, Form } from 'react-bootstrap'
+import { useSelector } from 'react-redux'
+import ChatContext from '../../contexts/chatContext'
+import { selectors } from '../../slices/Channels'
+import AuthContext from '../../contexts/authContext'
+import { useTranslation } from 'react-i18next'
 
-const validate = (channelsName) => Yup.object().shape({
+const validate = channelsName => Yup.object().shape({
   channelname: Yup.string()
     .min(3, 'От 3 до 20 символов')
     .max(20, 'От 3 до 20 символов')
     .required('От 3 до 20 символов')
     .notOneOf(channelsName, 'Должно быть уникальным'),
-});
+})
 
 const RenameModal = ({ handleClose, toast }) => {
-  const { t } = useTranslation();
-  const inputRef = useRef();
-  const chatContext = useContext(ChatContext);
+  const { t } = useTranslation()
+  const inputRef = useRef()
+  const chatContext = useContext(ChatContext)
   const auth = useContext(AuthContext)
-  const { renameChannel } = chatContext;
-  const id = useSelector((state) => state.modal.id);
-  const channel = useSelector((state) => selectors.selectById(state, id)).name;
-  const channelsName = useSelector(selectors.selectAll).map((chanel) => chanel.name);
+  const { renameChannel } = chatContext
+  const id = useSelector(state => state.modal.id)
+  const channel = useSelector(state => selectors.selectById(state, id)).name
+  const channelsName = useSelector(selectors.selectAll).map(chanel => chanel.name)
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
+    inputRef.current.focus()
+  }, [])
 
   const formik = useFormik({
     initialValues: {
@@ -36,22 +36,23 @@ const RenameModal = ({ handleClose, toast }) => {
     },
     onSubmit: async (values) => {
       try {
-        await renameChannel({id, name: values.channelname}, auth.getAuth());
-        handleClose();
-        toast('Канал переименован', 'success');
-      } catch {
-        toast('Ошибка', 'error');
+        await renameChannel({ id, name: values.channelname }, auth.getAuth())
+        handleClose()
+        toast('Канал переименован', 'success')
+      }
+      catch {
+        toast('Ошибка', 'error')
       }
     },
 
     validateOnChange: false,
     validateOnBlur: false,
     validationSchema: validate(channelsName),
-  });
+  })
 
   useEffect(() => {
-    inputRef.current.select();
-  }, []);
+    inputRef.current.select()
+  }, [])
 
   return (
     <>
@@ -66,7 +67,7 @@ const RenameModal = ({ handleClose, toast }) => {
               <button onClick={handleClose} type="button" aria-label="Close" data-bs-dismiss="modal" className="btn btn-close" />
             </div>
             <div className="modal-body">
-              <Form onSubmit={formik.handleSubmit} class="">
+              <Form onSubmit={formik.handleSubmit}>
                 <fieldset disabled={formik.isSubmitting}>
                   <div>
                     <Form.Control
@@ -83,7 +84,7 @@ const RenameModal = ({ handleClose, toast }) => {
                     />
                     <label className="visually-hidden" htmlFor="channelname">{t('chatPage.channels.name')}</label>
                     {formik.errors.channelname && formik.touched.channelname && (
-                    <div className="invalid-feedback">{formik.errors.channelname}</div>
+                      <div className="invalid-feedback">{formik.errors.channelname}</div>
                     )}
 
                     <div className="d-flex justify-content-end">
@@ -98,7 +99,7 @@ const RenameModal = ({ handleClose, toast }) => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default RenameModal;
+export default RenameModal
