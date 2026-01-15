@@ -8,7 +8,6 @@ const RenderMessage = () => {
   const currentChannel = useSelector(getCurrentChannel)
   const messageRef = useRef()
   const messages = useSelector(selectors.selectAll)
-  console.log(messages)
 
   const currentMessages = messages.filter(message => message.channelId === currentChannel.id)
 

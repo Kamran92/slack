@@ -1,20 +1,12 @@
 import { useRef, useEffect, useContext } from 'react'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
 import { Button, Form } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import ChatContext from '../../contexts/chatContext'
 import { selectors } from '../../slices/Channels'
 import AuthContext from '../../contexts/authContext'
 import { useTranslation } from 'react-i18next'
-
-const validate = channelsName => Yup.object().shape({
-  channelname: Yup.string()
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов')
-    .required('От 3 до 20 символов')
-    .notOneOf(channelsName, 'Должно быть уникальным'),
-})
+import { channelsNameSchema } from '../../validation/channelsNameSchema'
 
 const RenameModal = ({ handleClose, toast }) => {
   const { t } = useTranslation()
@@ -30,24 +22,25 @@ const RenameModal = ({ handleClose, toast }) => {
     inputRef.current.focus()
   }, [])
 
+  const onSubmit = async (values) => {
+    try {
+      await renameChannel({ id, name: values.channelName }, auth.getAuth())
+      handleClose()
+      toast('Канал переименован', 'success')
+    }
+    catch {
+      toast('Ошибка', 'error')
+    }
+  }
+
   const formik = useFormik({
     initialValues: {
-      channelname: channel,
+      channelName: channel,
     },
-    onSubmit: async (values) => {
-      try {
-        await renameChannel({ id, name: values.channelname }, auth.getAuth())
-        handleClose()
-        toast('Канал переименован', 'success')
-      }
-      catch {
-        toast('Ошибка', 'error')
-      }
-    },
-
+    onSubmit,
     validateOnChange: false,
     validateOnBlur: false,
-    validationSchema: validate(channelsName),
+    validationSchema: channelsNameSchema(channelsName),
   })
 
   useEffect(() => {
@@ -74,17 +67,17 @@ const RenameModal = ({ handleClose, toast }) => {
                       className="mb-2"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.channelname}
-                      name="channelname"
-                      id="channelname"
+                      value={formik.values.channelName}
+                      name="channelName"
+                      id="channelName"
                       autoComplete="off"
-                      isInvalid={formik.errors.channelname && formik.touched.channelname}
+                      isInvalid={formik.errors.channelName && formik.touched.channelName}
                       required
                       ref={inputRef}
                     />
-                    <label className="visually-hidden" htmlFor="channelname">{t('chatPage.channels.name')}</label>
-                    {formik.errors.channelname && formik.touched.channelname && (
-                      <div className="invalid-feedback">{formik.errors.channelname}</div>
+                    <label className="visually-hidden" htmlFor="channelName">{t('chatPage.channels.name')}</label>
+                    {formik.errors.channelName && formik.touched.channelName && (
+                      <div className="invalid-feedback">{formik.errors.channelName}</div>
                     )}
 
                     <div className="d-flex justify-content-end">

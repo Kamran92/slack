@@ -15,22 +15,24 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const [authFailed, setAuthFailed] = useState(false)
 
+  const onSubmit = async (values) => {
+    try {
+      const response = await axios.post('/api/v1/login', values)
+
+      auth.logIn(response.data)
+
+      navigate(routes.chat)
+    }
+    catch (err) {
+      console.log(err)
+      setAuthFailed(true)
+      inputRef.current.select()
+    }
+  }
+
   const formik = useFormik({
     initialValues: { username: '', password: '' },
-    onSubmit: async (values) => {
-      try {
-        const response = await axios.post('/api/v1/login', values)
-
-        auth.logIn(response.data)
-
-        navigate(routes.chat)
-      }
-      catch (err) {
-        console.log(err)
-        setAuthFailed(true)
-        inputRef.current.select()
-      }
-    },
+    onSubmit,
   })
 
   return (

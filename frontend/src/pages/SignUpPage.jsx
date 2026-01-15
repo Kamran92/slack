@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Form } from 'react-bootstrap'
-import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import axios from 'axios'
 import routes from '../pages/routes.js'
@@ -9,18 +8,7 @@ import HeaderComponent from '../components/Header.jsx'
 import AuthContext from '../contexts/authContext.jsx'
 import image from '../assets/image.png'
 import { useTranslation } from 'react-i18next'
-
-const loginSchema = Yup.object().shape({
-  username: Yup.string()
-    .required('Обязательное поле')
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов'),
-  password: Yup.string()
-    .required('Обязательное поле')
-    .min(6, 'Не менее 6 символов'),
-  confirmpassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать'),
-})
+import { loginSchema } from '../validation/loginSchema.js'
 
 const SignUpPage = () => {
   const { t } = useTranslation()
@@ -31,30 +19,32 @@ const SignUpPage = () => {
   const navigate = useNavigate()
   const [regFail, setRegFail] = useState(false)
 
+  const onSubmit = async (values) => {
+    try {
+      const response = await axios.post('api/v1/signup', values)
+      auth.logIn(response.data)
+      navigate(routes.chat)
+    }
+    catch (err) {
+      formik.setSubmitting(false)
+      if (err.isAxiosError && err.response.status === 401) {
+        userNameRef.current.select()
+        return
+      }
+      if (err.response.status === 409) {
+        setRegFail(true)
+      }
+      throw err
+    }
+  }
+
   const formik = useFormik({
     initialValues: {
       username: '',
       password: '',
       confirmpassword: '',
     },
-    onSubmit: async (values) => {
-      try {
-        const response = await axios.post('api/v1/signup', values)
-        auth.logIn(response.data)
-        navigate(routes.chat)
-      }
-      catch (err) {
-        formik.setSubmitting(false)
-        if (err.isAxiosError && err.response.status === 401) {
-          userNameRef.current.select()
-          return
-        }
-        if (err.response.status === 409) {
-          setRegFail(true)
-        }
-        throw err
-      }
-    },
+    onSubmit,
     validationSchema: loginSchema,
     validateOnChange: true,
   })

@@ -1,6 +1,5 @@
 import { useRef, useEffect, useContext } from 'react'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
 import { Button, Form } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import LeoProfanity from 'leo-profanity'
@@ -8,14 +7,7 @@ import ChatContext from '../../contexts/chatContext'
 import { selectors } from '../../slices/Channels'
 import authContext from '../../contexts/authContext.jsx'
 import { useTranslation } from 'react-i18next'
-
-const validate = channelsName => Yup.object().shape({
-  channelName: Yup.string()
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов')
-    .required('От 3 до 20 символов')
-    .notOneOf(channelsName, 'Должно быть уникальным'),
-})
+import { channelsNameSchema } from '../../validation/channelsNameSchema.js'
 
 const AddModal = ({ handleClose, toast }) => {
   const { t } = useTranslation()
@@ -30,22 +22,24 @@ const AddModal = ({ handleClose, toast }) => {
     inputRef.current.focus()
   }, [])
 
+  const onSubmit = async (values) => {
+    try {
+      await createChannel({ name: LeoProfanity.clean(values.channelName) }, auth.getAuth())
+      handleClose()
+      toast('Канал создан', 'success')
+    }
+    catch (err) {
+      console.log(err)
+      toast('Ошибка', 'error')
+    }
+  }
+
   const formik = useFormik({
     initialValues: {
       channelName: '',
     },
-    onSubmit: async (values) => {
-      try {
-        await createChannel({ name: LeoProfanity.clean(values.channelName) }, auth.getAuth())
-        handleClose()
-        toast('Канал создан', 'success')
-      }
-      catch (err) {
-        console.log(err)
-        toast('Ошибка', 'error')
-      }
-    },
-    validationSchema: validate(channelsName),
+    onSubmit,
+    validationSchema: channelsNameSchema(channelsName),
     validateOnChange: false,
   })
 
