@@ -75,7 +75,7 @@ const AddModal = ({ handleClose, toast }) => {
                       required
                       ref={inputRef}
                     />
-                    <label className="visually-hidden" htmlFor="name">{t('chatPage.channels.name')}</label>
+                    <label className="visually-hidden" htmlFor="channelName">{t('chatPage.channels.name')}</label>
                     {formik.errors.channelName && formik.touched.channelName && (
                     <div className="invalid-feedback">{formik.errors.channelName}</div>
                     )}
