@@ -108,7 +108,7 @@ const SignUpPage = () => {
                     </Form.Group>
                     <Form.Group className="form-floating mb-4">
                       <Form.Control
-                        type="confirmpassword"
+                        type="password"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.confirmpassword}
