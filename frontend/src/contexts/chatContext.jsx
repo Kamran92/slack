@@ -25,7 +25,7 @@ const ChatProvider = ({ socket, children }) => {
     })
 
     socket.on('renameChannel', (payload) => {
-      dispatch(channelsActions.renameChannel({ id: payload.id, changes: payload }))
+      dispatch(channelsActions.renameChannel({ id: payload.id, changes: { name: payload.name } }))
     })
   }, [dispatch, socket])
 
