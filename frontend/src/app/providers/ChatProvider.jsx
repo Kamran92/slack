@@ -1,0 +1,53 @@
+import { createContext, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import axios from 'axios'
+import { io } from 'socket.io-client'
+import { actions as messagesActions } from '../store/slices/Messages.js'
+import { actions as channelsActions } from '../store/slices/Channels.js'
+
+const ChatContext = createContext({})
+
+const ChatProvider = ({ children }) => {
+  const dispatch = useDispatch()
+
+  const socket = io()
+
+  useEffect(() => {
+    socket.on('newMessage', (message) => {
+      dispatch(messagesActions.addMessage(message))
+    })
+
+    socket.on('newChannel', (channel) => {
+      dispatch(channelsActions.addChannel(channel))
+    })
+
+    socket.on('removeChannel', (payload) => {
+      dispatch(channelsActions.removeChannel(payload.id))
+    })
+
+    socket.on('renameChannel', (payload) => {
+      dispatch(channelsActions.renameChannel({ id: payload.id, changes: { name: payload.name } }))
+    })
+  }, [dispatch, socket])
+
+  const values = {
+    sendNewMessage: async (message, auth) => await axios.post('/api/v1/messages', message, { headers: auth }),
+    createChannel: async (name, auth) => {
+      const { data } = await axios.post('/api/v1/channels', name, { headers: auth })
+
+      dispatch(channelsActions.addChannel(data))
+      dispatch(channelsActions.setChannelId(data.id))
+    },
+    removeChannel: async (id, auth) => await axios.delete(`/api/v1/channels/${id}`, { headers: auth }),
+    renameChannel: async (message, auth) => await axios.patch(`/api/v1/channels/${message.id}`, message, { headers: auth }),
+  }
+
+  return (
+    <ChatContext.Provider value={values}>
+      {children}
+    </ChatContext.Provider>
+  )
+}
+
+export { ChatProvider }
+export default ChatContext

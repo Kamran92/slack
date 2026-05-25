@@ -1,0 +1,1 @@
+export { rollbarConfig } from './rollbarConfig'
