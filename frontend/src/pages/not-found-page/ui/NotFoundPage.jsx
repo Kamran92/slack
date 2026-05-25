@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import notFound from '../../../shared/assets/notFound.svg'
-import { Header } from '../../../widgets/header'
+import notFound from '@shared/assets/notFound.svg'
+import { Header } from '@widgets/header'
 import { useTranslation } from 'react-i18next'
 
 const NotFoundPage = () => {

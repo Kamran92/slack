@@ -2,9 +2,9 @@ import { useState, useRef, useEffect, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { InputGroup, Form, Button } from 'react-bootstrap'
 import { ArrowRightSquare } from 'react-bootstrap-icons'
-import { getCurrentChannel } from '../../../app/store/slices/Channels.js'
-import ChatContext from '../../../app/providers/ChatProvider.jsx'
-import authContext from '../../../app/providers/AuthProvider.jsx'
+import { getCurrentChannel } from '@app/store/slices/Channels.js'
+import ChatContext from '@app/providers/ChatProvider.jsx'
+import authContext from '@app/providers/AuthProvider.jsx'
 import { useTranslation } from 'react-i18next'
 
 const SendMessages = () => {

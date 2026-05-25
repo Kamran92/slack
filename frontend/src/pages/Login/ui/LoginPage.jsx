@@ -2,10 +2,10 @@ import { useContext, useRef, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useFormik } from 'formik'
 import axios from 'axios'
-import { Header } from '../../../widgets/header'
-import routes from '../../../app/routes'
+import { Header } from '@widgets/header'
+import routes from '@app/routes'
 import { useNavigate } from 'react-router-dom'
-import authContext from '../../../app/providers/AuthProvider'
+import authContext from '@app/providers/AuthProvider'
 import { useTranslation } from 'react-i18next'
 
 const LoginPage = () => {

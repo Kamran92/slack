@@ -1,6 +1,6 @@
 import { Button } from 'react-bootstrap'
-import routes from '../../../app/routes.js'
-import AuthContext from '../../../app/providers/AuthProvider.jsx'
+import routes from '@app/routes.js'
+import AuthContext from '@app/providers/AuthProvider.jsx'
 import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 

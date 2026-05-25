@@ -1,5 +1,5 @@
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
-import { rollbarConfig } from '../../shared/config'
+import { rollbarConfig } from '@shared/config'
 
 export const RollbarProviderWrapper = ({ children }) => {
   return (

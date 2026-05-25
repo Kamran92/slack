@@ -1,9 +1,9 @@
 import { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'react-bootstrap'
-import { actions, selectors } from '../../../app/store/slices/Channels.js'
-import ChatContext from '../../../app/providers/ChatProvider.jsx'
-import AuthContext from '../../../app/providers/AuthProvider.jsx'
+import { actions, selectors } from '@app/store/slices/Channels.js'
+import ChatContext from '@app/providers/ChatProvider.jsx'
+import AuthContext from '@app/providers/AuthProvider.jsx'
 import { useTranslation } from 'react-i18next'
 
 const RemoveModal = ({ handleClose, toast }) => {

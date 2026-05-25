@@ -1,11 +1,11 @@
 import { Routes, Route } from 'react-router-dom'
-import routes from './routes.js'
-import NotFoundPage from '../pages/not-found-page/ui/NotFoundPage.jsx'
-import LoginPage from '../pages/Login/ui/LoginPage.jsx'
-import ChatPage from '../pages/chat/ui/ChatPage.jsx'
-import SignUpPage from '../pages/Login/ui/SignUpPage.jsx'
+import { NotFoundPage } from '@pages/not-found-page'
+import { LoginPage } from '@pages/Login'
+import { ChatPage } from '@pages/chat'
+import { SignUpPage } from '@pages/Login'
+import { AccessGuard } from '@features/auth'
 import { AppProviders } from './providers/index.jsx'
-import { AccessGuard } from '../features/auth/ui/AccessGuard.jsx'
+import routes from './routes.js'
 
 const App = () => {
   return (

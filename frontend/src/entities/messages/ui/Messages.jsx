@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { selectors } from '../../../app/store/slices/Messages.js'
-import { getCurrentChannel } from '../../../app/store/slices/Channels.js'
+import { selectors } from '@app/store/slices/Messages.js'
+import { getCurrentChannel } from '@app/store/slices/Channels.js'
 import LeoProfanity from 'leo-profanity'
 
 const Messages = () => {

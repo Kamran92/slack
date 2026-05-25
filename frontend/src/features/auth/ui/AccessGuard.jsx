@@ -1,9 +1,9 @@
 import { useContext } from 'react'
 import { Navigate } from 'react-router-dom'
-import AuthContext from '../../../app/providers/AuthProvider'
-import routes from '../../../app/routes'
+import AuthContext from '@app/providers/AuthProvider'
+import routes from '@app/routes'
 
-export const AccessGuard = ({ children }) => {
+const AccessGuard = ({ children }) => {
   const auth = useContext(AuthContext)
 
   if (auth.user === null) {
@@ -12,3 +12,5 @@ export const AccessGuard = ({ children }) => {
 
   return children
 }
+
+export default AccessGuard

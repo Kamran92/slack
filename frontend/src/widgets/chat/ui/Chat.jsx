@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { PlusSquare } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
-import { selectors, actions, getCurrentChannel } from '../../../app/store/slices/Channels.js'
-import { selectors as messagesSelect } from '../../../app/store/slices/Messages.js'
-import { SendMessage } from '../../../features/send-message'
-import { Messages } from '../../../entities/messages'
-import { actions as modalAction } from '../../../app/store/slices/Modals.js'
-import { Channel } from '../../../entities/channel'
+import { selectors, actions, getCurrentChannel } from '@app/store/slices/Channels.js'
+import { selectors as messagesSelect } from '@app/store/slices/Messages.js'
+import { SendMessage } from '@features/send-message'
+import { Messages } from '@entities/messages'
+import { actions as modalAction } from '@app/store/slices/Modals.js'
+import { Channel } from '@entities/channel'
 
 const Chat = () => {
   const { t } = useTranslation()
