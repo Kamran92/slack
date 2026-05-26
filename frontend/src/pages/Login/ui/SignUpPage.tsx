@@ -33,7 +33,7 @@ const SignUpPage = () => {
     }
     catch (err: unknown) {
       if (err && typeof err === 'object' && 'isAxiosError' in err) {
-        const axiosErr = err as { isAxiosError: boolean; response?: { status: number } }
+        const axiosErr = err as { isAxiosError: boolean, response?: { status: number } }
         if (axiosErr.isAxiosError && axiosErr.response?.status === 401) {
           userNameRef.current?.select()
           return

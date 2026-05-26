@@ -21,7 +21,7 @@ interface ChatContextValue {
   sendNewMessage: (message: Message, auth: Record<string, string>) => Promise<void>
   createChannel: (name: { name: string }, auth: Record<string, string>) => Promise<void>
   removeChannel: (id: number, auth: Record<string, string>) => Promise<void>
-  renameChannel: (message: { id: number; name: string }, auth: Record<string, string>) => Promise<void>
+  renameChannel: (message: { id: number, name: string }, auth: Record<string, string>) => Promise<void>
 }
 
 const ChatContext = createContext<ChatContextValue | null>(null)
@@ -48,7 +48,7 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
       dispatch(channelsActions.removeChannel(payload.id))
     })
 
-    socket.on('renameChannel', (payload: { id: number; name: string }) => {
+    socket.on('renameChannel', (payload: { id: number, name: string }) => {
       dispatch(channelsActions.renameChannel({ id: payload.id, changes: { name: payload.name } }))
     })
   }, [dispatch, socket])
