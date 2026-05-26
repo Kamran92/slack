@@ -1,36 +1,59 @@
-import { createContext, useEffect } from 'react'
+import { createContext, useEffect, ReactNode } from 'react'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { io } from 'socket.io-client'
-import { actions as messagesActions } from '../store/slices/Messages.js'
-import { actions as channelsActions } from '../store/slices/Channels.js'
+import { actions as messagesActions } from '../store/slices/Messages'
+import { actions as channelsActions } from '../store/slices/Channels'
 
-const ChatContext = createContext({})
+interface Message {
+  id: number
+  channelId: number
+  body: string
+  username: string
+}
 
-const ChatProvider = ({ children }) => {
+interface Channel {
+  id: number
+  name: string
+}
+
+interface ChatContextValue {
+  sendNewMessage: (message: Message, auth: Record<string, string>) => Promise<void>
+  createChannel: (name: { name: string }, auth: Record<string, string>) => Promise<void>
+  removeChannel: (id: number, auth: Record<string, string>) => Promise<void>
+  renameChannel: (message: { id: number; name: string }, auth: Record<string, string>) => Promise<void>
+}
+
+const ChatContext = createContext<ChatContextValue | null>(null)
+
+interface ChatProviderProps {
+  children: ReactNode
+}
+
+const ChatProvider = ({ children }: ChatProviderProps) => {
   const dispatch = useDispatch()
 
   const socket = io()
 
   useEffect(() => {
-    socket.on('newMessage', (message) => {
+    socket.on('newMessage', (message: Message) => {
       dispatch(messagesActions.addMessage(message))
     })
 
-    socket.on('newChannel', (channel) => {
+    socket.on('newChannel', (channel: Channel) => {
       dispatch(channelsActions.addChannel(channel))
     })
 
-    socket.on('removeChannel', (payload) => {
+    socket.on('removeChannel', (payload: { id: number }) => {
       dispatch(channelsActions.removeChannel(payload.id))
     })
 
-    socket.on('renameChannel', (payload) => {
+    socket.on('renameChannel', (payload: { id: number; name: string }) => {
       dispatch(channelsActions.renameChannel({ id: payload.id, changes: { name: payload.name } }))
     })
   }, [dispatch, socket])
 
-  const values = {
+  const values: ChatContextValue = {
     sendNewMessage: async (message, auth) => await axios.post('/api/v1/messages', message, { headers: auth }),
     createChannel: async (name, auth) => {
       const { data } = await axios.post('/api/v1/channels', name, { headers: auth })

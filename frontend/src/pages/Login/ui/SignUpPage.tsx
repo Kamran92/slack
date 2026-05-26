@@ -3,42 +3,53 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Form } from 'react-bootstrap'
 import { useFormik } from 'formik'
 import axios from 'axios'
-import routes from '@app/routes.js'
+import routes from '@app/routes'
 import { Header } from '@widgets/header'
-import AuthContext from '@app/providers/AuthProvider.jsx'
+import AuthContext from '@app/providers/AuthProvider'
 import image from '@shared/assets/image.png'
 import { useTranslation } from 'react-i18next'
-import { loginSchema } from '../lib/loginSchema.js'
+import { loginSchema } from '../lib/loginSchema'
+
+interface SignUpValues {
+  username: string
+  password: string
+  confirmpassword: string
+}
 
 const SignUpPage = () => {
   const { t } = useTranslation()
   const auth = useContext(AuthContext)
-  const userNameRef = useRef()
-  const passwordRef = useRef()
-  const confirmRef = useRef()
+  const userNameRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null)
+  const confirmRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
   const [regFail, setRegFail] = useState(false)
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: SignUpValues) => {
     try {
       const response = await axios.post('api/v1/signup', values)
-      auth.logIn(response.data)
+      auth?.logIn(response.data)
       navigate(routes.chat)
     }
-    catch (err) {
-      formik.setSubmitting(false)
-      if (err.isAxiosError && err.response.status === 401) {
-        userNameRef.current.select()
-        return
+    catch (err: unknown) {
+      if (err && typeof err === 'object' && 'isAxiosError' in err) {
+        const axiosErr = err as { isAxiosError: boolean; response?: { status: number } }
+        if (axiosErr.isAxiosError && axiosErr.response?.status === 401) {
+          userNameRef.current?.select()
+          return
+        }
       }
-      if (err.response.status === 409) {
-        setRegFail(true)
+      if (err && typeof err === 'object' && 'response' in err) {
+        const responseErr = err as { response: { status: number } }
+        if (responseErr.response.status === 409) {
+          setRegFail(true)
+        }
       }
       throw err
     }
   }
 
-  const formik = useFormik({
+  const formik = useFormik<SignUpValues>({
     initialValues: {
       username: '',
       password: '',
@@ -50,7 +61,7 @@ const SignUpPage = () => {
   })
 
   useEffect(() => {
-    userNameRef.current.focus()
+    userNameRef.current?.focus()
   }, [])
 
   return (
@@ -79,8 +90,7 @@ const SignUpPage = () => {
                         required
                         placeholder="От 3 до 20 символов"
                         ref={userNameRef}
-                        isInvalid={(formik.touched.username
-                          && formik.errors.username)}
+                        isInvalid={Boolean(formik.touched.username && formik.errors.username)}
                       />
                       <Form.Control.Feedback type="invalid" tooltip>
                         {formik.errors.username}
@@ -99,8 +109,7 @@ const SignUpPage = () => {
                         autoComplete="current-password"
                         ref={passwordRef}
                         required
-                        className={formik.touched.password
-                          && formik.errors.password
+                        className={Boolean(formik.touched.password && formik.errors.password)
                           ? 'is-invalid'
                           : ''}
                       />
@@ -119,9 +128,8 @@ const SignUpPage = () => {
                         autoComplete="new-password"
                         ref={confirmRef}
                         required
-                        isInvalid={formik.errors.confirmpassword || regFail}
-                        className={formik.touched.confirmpassword
-                          && formik.errors.confirmpassword
+                        isInvalid={Boolean(formik.errors.confirmpassword) || regFail}
+                        className={Boolean(formik.touched.confirmpassword && formik.errors.confirmpassword)
                           ? 'is-invalid'
                           : ''}
                       />

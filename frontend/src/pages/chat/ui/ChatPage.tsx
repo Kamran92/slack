@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { useContext, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { actions as channelsAction } from '@app/store/slices/Channels.js'
+import { actions as channelsAction } from '@app/store/slices/Channels'
 import { Header } from '@widgets/header'
 import { Chat } from '@widgets/chat'
-import { actions as messagesAction } from '@app/store/slices/Messages.js'
-import authContext from '@app/providers/AuthProvider.jsx'
+import { actions as messagesAction } from '@app/store/slices/Messages'
+import authContext from '@app/providers/AuthProvider'
 import { Modal } from '@entities/modal'
 import { toast, ToastContainer } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
@@ -19,17 +19,17 @@ const ChatPage = () => {
     const getResponse = async () => {
       try {
         const channels = await axios.get('/api/v1/channels', {
-          headers: auth.getAuth(),
+          headers: auth?.getAuth(),
         })
         const messages = await axios.get('/api/v1/messages', {
-          headers: auth.getAuth(),
+          headers: auth?.getAuth(),
         })
         dispatch(channelsAction.addChannels(channels.data))
         dispatch(messagesAction.addMessages(messages.data))
         dispatch(channelsAction.setChannelId(channels.data[0].id))
       }
       catch {
-        auth.logOut()
+        auth?.logOut()
         toast.error(t('toast.networkError'), { toastId: `${t('toast.networkError')} error` })
       }
     }

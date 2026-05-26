@@ -1,12 +1,16 @@
-import { useContext } from 'react'
+import { useContext, ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
 import AuthContext from '@app/providers/AuthProvider'
 import routes from '@app/routes'
 
-const AccessGuard = ({ children }) => {
+interface AccessGuardProps {
+  children: ReactNode
+}
+
+const AccessGuard = ({ children }: AccessGuardProps) => {
   const auth = useContext(AuthContext)
 
-  if (auth.user === null) {
+  if (auth?.user === null) {
     return <Navigate to={routes.login} />
   }
 

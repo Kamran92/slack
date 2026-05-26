@@ -1,25 +1,32 @@
 import { useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { selectors } from '@app/store/slices/Messages.js'
-import { getCurrentChannel } from '@app/store/slices/Channels.js'
+import { selectors } from '@app/store/slices/Messages'
+import { getCurrentChannel } from '@app/store/slices/Channels'
 import LeoProfanity from 'leo-profanity'
+
+interface Message {
+  id: number
+  channelId: number
+  body: string
+  username: string
+}
 
 const Messages = () => {
   const currentChannel = useSelector(getCurrentChannel)
-  const messageRef = useRef()
+  const messageRef = useRef<HTMLSpanElement>(null)
   const messages = useSelector(selectors.selectAll)
 
-  const currentMessages = messages.filter(message => message.channelId === currentChannel.id)
+  const currentMessages = messages.filter((message: Message) => message.channelId === currentChannel?.id)
 
   useEffect(() => {
-    messageRef.current.scrollIntoView({
+    messageRef.current?.scrollIntoView({
       behavior: 'smooth',
     })
   }, [currentMessages])
 
   return (
     <div id="messages-box" className="chat-messages overflow-auto px-5">
-      { currentMessages.map(message => (
+      { currentMessages.map((message: Message) => (
         <div key={message.id} className="text-break mb-2">
           <b>{message.username}</b>
           :

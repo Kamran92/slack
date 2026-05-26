@@ -9,5 +9,6 @@ export const loginSchema = Yup.object().shape({
     .required('Обязательное поле')
     .min(6, 'Не менее 6 символов'),
   confirmpassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать'),
+    .oneOf([Yup.ref('password')], 'Пароли должны совпадать')
+    .required('Обязательное поле'),
 })

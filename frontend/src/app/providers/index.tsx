@@ -4,8 +4,13 @@ import { I18nProvider } from './i18n/I18nProvider'
 import { RollbarProviderWrapper } from './RollbarProvider'
 import { AuthProvider } from './AuthProvider'
 import { ChatProvider } from './ChatProvider'
+import { ReactNode } from 'react'
 
-export const AppProviders = ({ children }) => {
+interface AppProvidersProps {
+  children: ReactNode
+}
+
+export const AppProviders = ({ children }: AppProvidersProps) => {
   return (
     <RollbarProviderWrapper>
       <StoreProvider>

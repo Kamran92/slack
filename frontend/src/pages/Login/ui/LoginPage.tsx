@@ -9,29 +9,34 @@ import authContext from '@app/providers/AuthProvider'
 import { useTranslation } from 'react-i18next'
 import loginImage from '@shared/assets/loginImage.jpg'
 
+interface LoginValues {
+  username: string
+  password: string
+}
+
 const LoginPage = () => {
-  const inputRef = useRef()
+  const inputRef = useRef<HTMLInputElement>(null)
   const { t } = useTranslation()
   const auth = useContext(authContext)
   const navigate = useNavigate()
   const [authFailed, setAuthFailed] = useState(false)
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: LoginValues) => {
     try {
       const response = await axios.post('/api/v1/login', values)
 
-      auth.logIn(response.data)
+      auth?.logIn(response.data)
 
       navigate(routes.chat)
     }
     catch (err) {
       console.log(err)
       setAuthFailed(true)
-      inputRef.current.select()
+      inputRef.current?.select()
     }
   }
 
-  const formik = useFormik({
+  const formik = useFormik<LoginValues>({
     initialValues: { username: '', password: '' },
     onSubmit,
   })

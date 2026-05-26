@@ -1,34 +1,40 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { PlusSquare } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
-import { selectors, actions, getCurrentChannel } from '@app/store/slices/Channels.js'
-import { selectors as messagesSelect } from '@app/store/slices/Messages.js'
+import { selectors, actions, getCurrentChannel } from '@app/store/slices/Channels'
+import { selectors as messagesSelect } from '@app/store/slices/Messages'
 import { SendMessage } from '@features/send-message'
 import { Messages } from '@entities/messages'
-import { actions as modalAction } from '@app/store/slices/Modals.js'
+import { actions as modalAction } from '@app/store/slices/Modals'
 import { Channel } from '@entities/channel'
+
+interface ChannelItem {
+  id: number
+  name: string
+  removable?: boolean
+}
 
 const Chat = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const channels = useSelector(selectors.selectAll)
   const currentChannel = useSelector(getCurrentChannel)
-  const handleChannel = (id) => {
+  const handleChannel = (id: number) => {
     dispatch(actions.setChannelId(id))
   }
   const messagesMass = useSelector(messagesSelect.selectAll)
-  const currentMessages = messagesMass.filter(message => message.channelId === currentChannel.id)
+  const currentMessages = messagesMass.filter((message: { channelId: number }) => message.channelId === currentChannel?.id)
   const currentChannelName = useSelector(selectors.selectAll)
-    .find(({ id }) => id === currentChannel.id)
+    .find(({ id }: { id: number }) => id === currentChannel?.id)
     ?.name
 
   const addChannel = () => {
     dispatch(modalAction.openModal({ type: 'add' }))
   }
-  const removeChannel = (id) => {
+  const removeChannel = (id: number) => {
     dispatch(modalAction.openModal({ type: 'remove', id }))
   }
-  const renameChannel = (id) => {
+  const renameChannel = (id: number) => {
     dispatch(modalAction.openModal({ type: 'rename', id }))
   }
 
@@ -43,15 +49,14 @@ const Chat = () => {
           </button>
         </div>
         <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
-          {channels.map(channel => (
+          {channels.map((channel: ChannelItem) => (
             <Channel
               handleChannel={handleChannel}
               key={channel.id}
               channel={channel}
-              currentChannel={currentChannel}
+              currentChannel={currentChannel ?? null}
               remove={removeChannel}
               rename={renameChannel}
-              t={t}
             />
           ))}
         </ul>

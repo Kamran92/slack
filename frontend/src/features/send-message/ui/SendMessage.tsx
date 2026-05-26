@@ -2,41 +2,41 @@ import { useState, useRef, useEffect, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { InputGroup, Form, Button } from 'react-bootstrap'
 import { ArrowRightSquare } from 'react-bootstrap-icons'
-import { getCurrentChannel } from '@app/store/slices/Channels.js'
-import ChatContext from '@app/providers/ChatProvider.jsx'
-import authContext from '@app/providers/AuthProvider.jsx'
+import { getCurrentChannel } from '@app/store/slices/Channels'
+import ChatContext from '@app/providers/ChatProvider'
+import authContext from '@app/providers/AuthProvider'
 import { useTranslation } from 'react-i18next'
 
 const SendMessages = () => {
   const { t } = useTranslation()
   const [text, setText] = useState('')
-  const ref = useRef()
+  const ref = useRef<HTMLInputElement>(null)
   const currentChannel = useSelector(getCurrentChannel)
   const auth = useContext(authContext)
-  const chatContext = useContext(ChatContext)
-  const { sendNewMessage } = chatContext
+  const chat = useContext(ChatContext)
 
   const sendMessage = async () => {
+    if (!currentChannel || !auth) return
     const message = {
+      id: Date.now(),
       body: text,
       channelId: currentChannel.id,
-      username: auth.user.username,
+      username: (auth.user?.username as string) ?? '',
     }
 
-    await sendNewMessage(message, auth.getAuth())
+    await chat?.sendNewMessage?.(message, auth.getAuth())
 
     setText('')
   }
 
   useEffect(() => {
-    ref.current.focus()
+    ref.current?.focus()
   }, [])
 
   return (
     <div className="mt-auto px-5 py-3">
       <Form
         className="py-1 border rounded-2"
-        noValidate=""
         onSubmit={(e) => {
           e.preventDefault()
           sendMessage()
@@ -50,7 +50,6 @@ const SendMessages = () => {
             onChange={e => setText(e.target.value)}
             aria-label="Новое сообщение"
             className="border-0 p-0 ps-2"
-            noValidate=""
             ref={ref}
           />
           <Button variant="group-vertical btn-light" type="submit" disabled={text === ''}>

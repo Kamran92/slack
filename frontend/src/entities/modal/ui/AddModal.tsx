@@ -2,61 +2,66 @@ import { useRef, useEffect, useContext } from 'react'
 import { useFormik } from 'formik'
 import { Button, Form } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
+import LeoProfanity from 'leo-profanity'
 import ChatContext from '@app/providers/ChatProvider'
 import { selectors } from '@app/store/slices/Channels'
-import AuthContext from '@app/providers/AuthProvider'
+import authContext from '@app/providers/AuthProvider'
 import { useTranslation } from 'react-i18next'
 import { channelsNameSchema } from '../lib/channelsNameSchema'
 
-const RenameModal = ({ handleClose, toast }) => {
+interface AddModalProps {
+  handleClose: () => void
+  toast: (message: string, result: 'success' | 'error') => string | number
+}
+
+interface AddModalValues {
+  channelName: string
+}
+
+const AddModal = ({ handleClose, toast }: AddModalProps) => {
   const { t } = useTranslation()
-  const inputRef = useRef()
+  const inputRef = useRef<HTMLInputElement>(null)
+  const auth = useContext(authContext)
   const chatContext = useContext(ChatContext)
-  const auth = useContext(AuthContext)
-  const { renameChannel } = chatContext
-  const id = useSelector(state => state.modal.id)
-  const channel = useSelector(state => selectors.selectById(state, id)).name
-  const channelsName = useSelector(selectors.selectAll).map(chanel => chanel.name)
+  const { createChannel } = chatContext!
+  const channels = useSelector(selectors.selectAll)
+  const channelsName = channels.map(channel => channel.name)
 
   useEffect(() => {
-    inputRef.current.focus()
+    inputRef.current?.focus()
   }, [])
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: AddModalValues) => {
     try {
-      await renameChannel({ id, name: values.channelName }, auth.getAuth())
+      await createChannel({ name: LeoProfanity.clean(values.channelName) }, auth!.getAuth())
       handleClose()
-      toast('Канал переименован', 'success')
+      toast('Канал создан', 'success')
     }
-    catch {
+    catch (err) {
+      console.log(err)
       toast('Ошибка', 'error')
     }
   }
 
   const formik = useFormik({
     initialValues: {
-      channelName: channel,
+      channelName: '',
     },
     onSubmit,
-    validateOnChange: false,
-    validateOnBlur: false,
     validationSchema: channelsNameSchema(channelsName),
+    validateOnChange: false,
   })
-
-  useEffect(() => {
-    inputRef.current.select()
-  }, [])
 
   return (
     <>
       <div className="fade modal-backdrop show">
         <div />
       </div>
-      <div role="dialog" aria-modal="true" style={{ display: 'block' }} className="fade modal show" tabIndex="-1">
+      <div role="dialog" aria-modal="true" style={{ display: 'block' }} className="fade modal show" tabIndex={-1}>
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <div className="modal-title h4">{t('modal.rename')}</div>
+              <div className="modal-title h4">{t('modal.add')}</div>
               <button onClick={handleClose} type="button" aria-label="Close" data-bs-dismiss="modal" className="btn btn-close" />
             </div>
             <div className="modal-body">
@@ -66,12 +71,11 @@ const RenameModal = ({ handleClose, toast }) => {
                     <Form.Control
                       className="mb-2"
                       onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
                       value={formik.values.channelName}
                       name="channelName"
                       id="channelName"
-                      autoComplete="off"
-                      isInvalid={formik.errors.channelName && formik.touched.channelName}
+                      autoComplete="channelName"
+                      isInvalid={!!(formik.errors.channelName && formik.touched.channelName)}
                       required
                       ref={inputRef}
                     />
@@ -82,7 +86,7 @@ const RenameModal = ({ handleClose, toast }) => {
 
                     <div className="d-flex justify-content-end">
                       <Button onClick={handleClose} type="button" variant="secondary me-2" disabled={formik.isSubmitting}>{t('modal.cancel')}</Button>
-                      <Button type="submit" value="submit" variant="primary" disabled={formik.isSubmitting}>{t('modal.send')}</Button>
+                      <Button type="submit" variant="primary" disabled={formik.isSubmitting}>{t('modal.send')}</Button>
                     </div>
                   </div>
                 </fieldset>
@@ -95,4 +99,4 @@ const RenameModal = ({ handleClose, toast }) => {
   )
 }
 
-export default RenameModal
+export default AddModal
